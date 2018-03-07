@@ -9,4 +9,8 @@ class MarsRovers
   def plateau_upper_right_coordinates
     input.first.split.map(&:to_i)
   end
+
+  def land_rovers
+    input[1, input.size]
+  end
 end
