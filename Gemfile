@@ -14,3 +14,5 @@ gem 'rubocop-rspec'
 # pry-byebug debugger
 gem 'pry-byebug'
 
+# Code coverage for Ruby
+gem 'simplecov', require: false
