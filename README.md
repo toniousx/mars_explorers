@@ -28,11 +28,11 @@ spot. ‘M’ means move forward one grid point, and maintain the same
 
 Heading.
 
- 
+
 
 Assume that the square directly North from (x, y) is (x, y+1).
 
- 
+
 
 ## INPUT:
 
@@ -60,7 +60,7 @@ second rover won’t start to move until the first one has finished
 
 Moving.
 
- 
+
 
 ## OUTPUT
 

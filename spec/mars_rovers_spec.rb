@@ -6,6 +6,8 @@ describe MarsRovers do
   let(:input_array) { mars_rovers_instance.input }
 
   describe 'Input' do
+    let(:rovers) { mars_rovers_instance.rovers }
+
     it 'is an Array' do
       expect(input_array).to be_an(Array)
     end
@@ -22,11 +24,52 @@ describe MarsRovers do
       end
     end
 
-    describe '#land_rovers' do
-      let(:land_rovers) { mars_rovers_instance.land_rovers }
+    describe '#rovers' do
+      it 'has rovers' do
+        expect(rovers).to eq(['1 2 N', 'LMLMLMLMM', '3 3 E', 'MMRMMRMRRM'])
+      end
+    end
 
-      it 'has land rovers' do
-        expect(land_rovers).to eq(['1 2 N', 'LMLMLMLMM', '3 3 E', 'MMRMMRMRRM'])
+    describe '#rovers_validator' do
+      let(:valid_rovers) { mars_rovers_instance.rovers_validator }
+
+      it 'has a valid rover' do
+        expect(valid_rovers).to eq(true)
+      end
+    end
+
+    context 'when rover validator is out of scope' do
+      let(:input) { "5 5\n6 7 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM" }
+      let(:mars_rovers_instance) { described_class.new(input) }
+      let(:invalid_scope_rovers) { mars_rovers_instance.rovers_validator }
+
+      it 'has coordenates are out the plateau' do
+        expect(invalid_scope_rovers).to eq(false)
+      end
+    end
+
+    context 'when rover validator items are not 3' do
+      let(:input) { "5 5\n4 2 3 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM" }
+      let(:invalid_big_size_rovers) { mars_rovers_instance.rovers_validator }
+      let(:small_input) { "5 5\n 3 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM" }
+      let(:mars_rovers_instance_small) { described_class.new(small_input) }
+      let(:invalid_small_size_rovers) { mars_rovers_instance_small.rovers_validator }
+
+      it 'has more than 3 items' do
+        expect(invalid_big_size_rovers).to eq(false)
+      end
+
+      it 'has less than 3 items' do
+        expect(invalid_small_size_rovers).to eq(false)
+      end
+    end
+
+    context 'when rover has incorrect data' do
+      let(:input) { "5 5\nD A -3\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM" }
+      let(:invalid_data_rovers) { mars_rovers_instance.rovers_validator }
+
+      it 'has strings instead integres and integers instead strings' do
+        expect(invalid_data_rovers).to eq(false)
       end
     end
   end
