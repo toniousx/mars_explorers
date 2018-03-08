@@ -5,7 +5,7 @@ describe MarsRovers do
   let(:mars_rovers_instance) { described_class.new(input) }
   let(:input_array) { mars_rovers_instance.input }
 
-  describe 'Input' do
+  describe 'input' do
     let(:rovers) { mars_rovers_instance.rovers }
 
     it 'is an Array' do
@@ -98,5 +98,39 @@ describe MarsRovers do
         expect(invalid_data_rovers).to eq(false)
       end
     end
+  end
+
+  describe '#rover_controller' do
+    let(:rover) { mars_rovers_instance.rover_controller }
+
+    it 'has a valid rover' do
+      expect(mars_rovers_instance.rover_controller).to eq(nil)
+    end
+
+    context 'when rover is not valid' do
+      let(:input) { "5 5\n1 2 N\nLM LM LMLMM\n3 3 E\nMMR MMRMRRM" }
+      let(:invalid_data_rovers) { mars_rovers_instance.commands_validator }
+
+      it 'raise an error comment' do
+        expect(mars_rovers_instance.rover_controller).to start_with('Houston we have a problem')
+      end
+    end
+
+    # describe '#right' do
+    #   let(:input) { 'N' }
+    #   let(:right) { described_class.right(input) }
+
+    #   it 'has a right command' do
+    #     expect(right).to eq('E')
+    #   end
+    # end
+
+    # describe '#l' do
+
+    # end
+
+    # describe '#m' do
+
+    # end
   end
 end

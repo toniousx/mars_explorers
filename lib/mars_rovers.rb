@@ -74,4 +74,13 @@ class MarsRovers
     end
     command_value_results.flatten.all?(true)
   end
+
+  def rover_controller
+    if commands_validator && rovers_validator
+    else
+      'Houston we have a problem: Please check your given input for possible errors'
+    end
+  end
+
+  def right(initial_command, new_command); end
 end
