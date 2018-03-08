@@ -72,5 +72,31 @@ describe MarsRovers do
         expect(invalid_data_rovers).to eq(false)
       end
     end
+
+    describe '#commands_validator' do
+      let(:valid_commands) { mars_rovers_instance.commands_validator }
+
+      it 'has valid commands' do
+        expect(valid_commands).to eq(true)
+      end
+    end
+
+    context 'when commands are not valid' do
+      let(:input) { "5 5\n1 2 N\n1234ABC\n3 3 E\nSDD" }
+      let(:invalid_data_rovers) { mars_rovers_instance.commands_validator }
+
+      it 'has any kind of items except commands' do
+        expect(invalid_data_rovers).to eq(false)
+      end
+    end
+
+    context 'when commands have spaces' do
+      let(:input) { "5 5\n1 2 N\nLM LM LMLMM\n3 3 E\nMMR MMRMRRM" }
+      let(:invalid_data_rovers) { mars_rovers_instance.commands_validator }
+
+      it 'items are correct except space' do
+        expect(invalid_data_rovers).to eq(false)
+      end
+    end
   end
 end
