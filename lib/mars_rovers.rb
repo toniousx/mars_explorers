@@ -58,9 +58,7 @@ class MarsRovers
       plateau_scope_results << plateau_scope_validator(line)
       rel_dir_size_results  << rel_direction_sizer(line)
     end
-    plateau_scope_results.all?(true) &&
-      rel_direction_values.all?(true) &&
-      rel_dir_size_results.all?(true)
+    plateau_scope_results.all?(true) && rel_direction_values.all?(true) && rel_dir_size_results.all?(true)
   end
 
   def command_values(line)
