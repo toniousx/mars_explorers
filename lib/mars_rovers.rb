@@ -75,12 +75,45 @@ class MarsRovers
     command_value_results.flatten.all?(true)
   end
 
+  def rovers_block
+    rovers.each_slice(2).to_a
+  end
+
+  def initial_movement; end
+
+  def r(previous_relative_coordinate)
+    previous_coordinate = previous_relative_coordinate.split.last
+    case previous_coordinate
+    when 'N'
+      previous_relative_coordinate.tr('N', 'E')
+    when 'E'
+      previous_relative_coordinate.tr('E', 'S')
+    when 'S'
+      previous_relative_coordinate.tr('S', 'W')
+    when 'W'
+      previous_relative_coordinate.tr('W', 'N')
+    end
+  end
+
+  def l(previous_relative_coordinate)
+    previous_coordinate = previous_relative_coordinate.split.last
+    case previous_coordinate
+    when 'N'
+      previous_relative_coordinate.tr('N', 'W')
+    when 'W'
+      previous_relative_coordinate.tr('W', 'S')
+    when 'S'
+      previous_relative_coordinate.tr('S', 'E')
+    when 'E'
+      previous_relative_coordinate.tr('E', 'N')
+    end
+  end
+
   def rover_controller
     if commands_validator && rovers_validator
+
     else
       'Houston we have a problem: Please check your given input for possible errors'
     end
   end
-
-  def right(initial_command, new_command); end
 end
