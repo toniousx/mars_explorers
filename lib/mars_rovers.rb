@@ -111,7 +111,18 @@ class MarsRovers
 
   def rover_controller
     if commands_validator && rovers_validator
-
+      # rovers_block.each do |rover|
+      #   initial_movement = rover.first
+      #   next_movement = rover.split('').each do |movement|
+      #   case movement
+      #   when 'L'
+      #     l(previous_relative_coordinate)
+      #   when 'R'
+      #     r(previous_relative_coordinate)
+      #   when 'M'
+      #     # pending
+      #   end
+      # end
     else
       'Houston we have a problem: Please check your given input for possible errors'
     end

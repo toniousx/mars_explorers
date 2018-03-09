@@ -171,4 +171,12 @@ describe MarsRovers do
       end
     end
   end
+
+  # describe '#previous_rover_coordinates' do
+  #   let(:first_rover_coordinates) { mars_rovers_instance.previous_rover_coordinates }
+
+  #   it 'has first command value' do
+  #     expect(first_rover_coordinates).to eq('L')
+  #   end
+  # end
 end
