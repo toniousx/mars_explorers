@@ -125,11 +125,11 @@ describe MarsRovers do
       end
     end
 
-    describe '#r' do
-      let(:north_right_movement)  { mars_rovers_instance.r('1 2 N') }
-      let(:east_right_movement)   { mars_rovers_instance.r('1 2 E') }
-      let(:south_right_movement)  { mars_rovers_instance.r('1 2 S') }
-      let(:west_right_movement)   { mars_rovers_instance.r('1 2 W') }
+    describe '#right' do
+      let(:north_right_movement)  { mars_rovers_instance.right('1 2 N') }
+      let(:east_right_movement)   { mars_rovers_instance.right('1 2 E') }
+      let(:south_right_movement)  { mars_rovers_instance.right('1 2 S') }
+      let(:west_right_movement)   { mars_rovers_instance.right('1 2 W') }
 
       it "have from previous 'N' movement 90 degrees to the right to 'E'" do
         expect(north_right_movement).to eq('1 2 E')
@@ -148,11 +148,11 @@ describe MarsRovers do
       end
     end
 
-    describe '#l' do
-      let(:north_left_movement)  { mars_rovers_instance.l('1 2 N') }
-      let(:west_left_movement)   { mars_rovers_instance.l('1 2 W') }
-      let(:south_left_movement)  { mars_rovers_instance.l('1 2 S') }
-      let(:east_left_movement)   { mars_rovers_instance.l('1 2 E') }
+    describe '#left' do
+      let(:north_left_movement)  { mars_rovers_instance.left('1 2 N') }
+      let(:west_left_movement)   { mars_rovers_instance.left('1 2 W') }
+      let(:south_left_movement)  { mars_rovers_instance.left('1 2 S') }
+      let(:east_left_movement)   { mars_rovers_instance.left('1 2 E') }
 
       it "have from previous 'N' movement 90 degrees to the left to 'W'" do
         expect(north_left_movement).to eq('1 2 W')
@@ -170,13 +170,81 @@ describe MarsRovers do
         expect(east_left_movement).to eq('1 2 N')
       end
     end
+
+    describe '#move' do
+      let(:north_move_action)  { mars_rovers_instance.move('1 2 N') }
+      let(:west_move_action)   { mars_rovers_instance.move('1 2 W') }
+      let(:south_move_action)  { mars_rovers_instance.move('1 2 S') }
+      let(:east_move_action)   { mars_rovers_instance.move('1 2 E') }
+
+      it "have from previous 'N' movement 90 degrees to the left to 'W'" do
+        expect(north_move_action).to eq('1 3 N')
+      end
+
+      it "have from previous 'W' action 90 degrees to the move to 'S'" do
+        expect(west_move_action).to eq('0 2 W')
+      end
+
+      it "have from previous 'S' action 90 degrees to the move to 'E'" do
+        expect(south_move_action).to eq('1 1 S')
+      end
+
+      it "have from previous 'E' action 90 degrees to the move to 'N'" do
+        expect(east_move_action).to eq('2 2 E')
+      end
+    end
   end
 
-  # describe '#previous_rover_coordinates' do
-  #   let(:first_rover_coordinates) { mars_rovers_instance.previous_rover_coordinates }
+  xdescribe '#rover_coordinates_filter' do
+    #let(:present_status)    { ['1 2 N'] }
+    #let(:next_command)      { 'L' }
+    let(:rovers_block)      { ['1 2 N'] }
+    let(:first_coordinates) { mars_rovers_instance.rover_coordinates_filter } #(present_status, next_command) }
 
-  #   it 'has first command value' do
-  #     expect(first_rover_coordinates).to eq('L')
-  #   end
-  # end
+    it 'has first command value' do
+      expect(first_coordinates).to eq('1 2 W')
+    end
+  end
+
+  describe '#commander' do
+    context 'when commander has L input' do
+      let(:present_status_n)      { '1 2 N' }
+      let(:command_left)          { 'LL' }
+      let(:commander_left_action) { mars_rovers_instance.commander(present_status_n, command_left) }
+
+      it 'has status N and command L till W ' do
+        expect(commander_left_action).to eq('1 2 W')
+      end
+    end
+
+    context 'when commander has R input' do
+      let(:present_status_n)      { '1 2 N' }
+      let(:command_left)          { 'RR' }
+      let(:commander_left_action) { mars_rovers_instance.commander(present_status_n, command_left) }
+
+      it 'has status N and command R till E' do
+        expect(commander_left_action).to eq('1 2 E')
+      end
+    end
+
+    xcontext 'when commander has M input' do
+      let(:present_status_n)      { '1 2 N' }
+      let(:command_move)          { 'M' }
+      let(:commander_move_action) { mars_rovers_instance.commander(present_status_n, command_left) }
+
+      it 'has status N and command M will move (x, y + 1)' do
+        expect(command_move).to eq('1 3 N')
+      end
+    end
+
+    xcontext 'when commander has M input' do
+      let(:present_status_w)      { '1 2 W' }
+      let(:command_move)          { 'M' }
+      let(:commander_left_action) { mars_rovers_instance.commander(present_status_w, command_left) }
+
+      it 'has status N and command M will move (x, y + 1)' do
+        expect(commander_left_action).to eq('1 3 N')
+      end
+    end
+  end
 end

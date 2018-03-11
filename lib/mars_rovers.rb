@@ -79,33 +79,69 @@ class MarsRovers
     rovers.each_slice(2).to_a
   end
 
-  def initial_movement; end
-
-  def r(previous_relative_coordinate)
-    previous_coordinate = previous_relative_coordinate.split.last
-    case previous_coordinate
+  def right(rel_direction_status)
+    last_coordinate = rel_direction_status.split.last
+    case last_coordinate
     when 'N'
-      previous_relative_coordinate.tr('N', 'E')
+      rel_direction_status.tr('N', 'E')
     when 'E'
-      previous_relative_coordinate.tr('E', 'S')
+      rel_direction_status.tr('E', 'S')
     when 'S'
-      previous_relative_coordinate.tr('S', 'W')
+      rel_direction_status.tr('S', 'W')
     when 'W'
-      previous_relative_coordinate.tr('W', 'N')
+      rel_direction_status.tr('W', 'N')
     end
   end
 
-  def l(previous_relative_coordinate)
-    previous_coordinate = previous_relative_coordinate.split.last
-    case previous_coordinate
+  def left(rel_direction_status)
+    last_coordinate = rel_direction_status.split.last
+    case last_coordinate
     when 'N'
-      previous_relative_coordinate.tr('N', 'W')
+      rel_direction_status.tr('N', 'W')
     when 'W'
-      previous_relative_coordinate.tr('W', 'S')
+      rel_direction_status.tr('W', 'S')
     when 'S'
-      previous_relative_coordinate.tr('S', 'E')
+      rel_direction_status.tr('S', 'E')
     when 'E'
-      previous_relative_coordinate.tr('E', 'N')
+      rel_direction_status.tr('E', 'N')
+    end
+  end
+
+  def move(rel_direction_status)
+    ary_status = rel_direction_status.split
+    x_position = ary_status[0].to_i
+    y_position = ary_status[1].to_i
+    last_coordinate = ary_status.last
+
+    case last_coordinate
+    when 'N'
+      ary_status[1]  = (y_position + 1).to_s
+    when 'W'
+      ary_status[0]  = (x_position - 1).to_s
+    when 'S'
+      ary_status[1]  = (y_position - 1).to_s
+    when 'E'
+      ary_status[0]  = (x_position + 1).to_s
+    end
+    rel_direction_status = ary_status.join(' ')
+  end
+
+  def commander(rel_direction_status, commands)
+    commands.split('').each do |command|
+      if command == 'L'
+        return left(rel_direction_status)
+      elsif command == 'R'
+        return right(rel_direction_status)
+      else
+      end
+    end
+  end
+
+  def rover_coordinates_filter#( present_status = nil, next_commad = nil)
+    rovers_block.each do |rover|
+      rover.each_cons(2) do |present_status, commands|
+        commander(present_status, commands)
+      end
     end
   end
 
@@ -116,9 +152,9 @@ class MarsRovers
       #   next_movement = rover.split('').each do |movement|
       #   case movement
       #   when 'L'
-      #     l(previous_relative_coordinate)
+      #     left(command)
       #   when 'R'
-      #     r(previous_relative_coordinate)
+      #     right(command)
       #   when 'M'
       #     # pending
       #   end
