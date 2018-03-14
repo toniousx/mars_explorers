@@ -100,7 +100,7 @@ describe MarsRovers do
     end
   end
 
-  describe '#rover_controller' do
+  describe '#move' do
     let(:rover) { mars_rovers_instance.rover_controller }
     let(:rovers_block) { mars_rovers_instance.rovers_block }
 
@@ -193,16 +193,13 @@ describe MarsRovers do
         expect(east_move_action).to eq('2 2 E')
       end
     end
-  end
 
-  xdescribe '#rover_coordinates_filter' do
-    #let(:present_status)    { ['1 2 N'] }
-    #let(:next_command)      { 'L' }
-    let(:rovers_block)      { ['1 2 N'] }
-    let(:first_coordinates) { mars_rovers_instance.rover_coordinates_filter } #(present_status, next_command) }
+    describe '#status_hash' do
+      let(:north_move_action) { mars_rovers_instance.status_hash('1 2 N') }
 
-    it 'has first command value' do
-      expect(first_coordinates).to eq('1 2 W')
+      it 'has a hash' do
+        expect(north_move_action).to eq(x: '1', y: '2', direction: 'N')
+      end
     end
   end
 
@@ -227,24 +224,27 @@ describe MarsRovers do
       end
     end
 
-    xcontext 'when commander has M input' do
+    context 'when commander has M input' do
       let(:present_status_n)      { '1 2 N' }
       let(:command_move)          { 'M' }
-      let(:commander_move_action) { mars_rovers_instance.commander(present_status_n, command_left) }
+      let(:commander_move_n_action) { mars_rovers_instance.commander(present_status_n, command_move) }
 
       it 'has status N and command M will move (x, y + 1)' do
-        expect(command_move).to eq('1 3 N')
+        expect(commander_move_n_action).to eq('1 3 N')
       end
     end
 
-    xcontext 'when commander has M input' do
+    context 'when commander has M input' do
       let(:present_status_w)      { '1 2 W' }
       let(:command_move)          { 'M' }
-      let(:commander_left_action) { mars_rovers_instance.commander(present_status_w, command_left) }
+      let(:commander_move_w_action) { mars_rovers_instance.commander(present_status_w, command_move) }
 
       it 'has status N and command M will move (x, y + 1)' do
-        expect(commander_left_action).to eq('1 3 N')
+        expect(commander_move_w_action).to eq('0 2 W')
       end
     end
   end
+
+  # describe 'rover_controller' do
+  # end
 end

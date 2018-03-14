@@ -79,9 +79,12 @@ class MarsRovers
     rovers.each_slice(2).to_a
   end
 
+  def coordinate(rel_direction_status)
+    rel_direction_status.split.last
+  end
+
   def right(rel_direction_status)
-    last_coordinate = rel_direction_status.split.last
-    case last_coordinate
+    case coordinate(rel_direction_status)
     when 'N'
       rel_direction_status.tr('N', 'E')
     when 'E'
@@ -94,8 +97,7 @@ class MarsRovers
   end
 
   def left(rel_direction_status)
-    last_coordinate = rel_direction_status.split.last
-    case last_coordinate
+    case coordinate(rel_direction_status)
     when 'N'
       rel_direction_status.tr('N', 'W')
     when 'W'
@@ -107,58 +109,41 @@ class MarsRovers
     end
   end
 
-  def move(rel_direction_status)
-    ary_status = rel_direction_status.split
-    x_position = ary_status[0].to_i
-    y_position = ary_status[1].to_i
-    last_coordinate = ary_status.last
+  def movement(axis_position, abscissa_and_ordinate, operator)
+    abscissa_and_ordinate[axis_position].to_i.send(operator, 1).to_s
+  end
 
-    case last_coordinate
+  def status_hash(rel_direction)
+    rel_direction_ary = rel_direction.split
+    [[:x, rel_direction_ary[0]], [:y, rel_direction_ary[1]], [:direction, rel_direction_ary[2]]].to_h
+  end
+
+  def move(rel_direction)
+    status = status_hash(rel_direction)
+    case status[:direction]
     when 'N'
-      ary_status[1]  = (y_position + 1).to_s
+      status[:y] = movement(1, [status[:x], status[:y]], :+)
     when 'W'
-      ary_status[0]  = (x_position - 1).to_s
+      status[:x] = movement(0, [status[:x], status[:y]], :-)
     when 'S'
-      ary_status[1]  = (y_position - 1).to_s
+      status[:y] = movement(1, [status[:x], status[:y]], :-)
     when 'E'
-      ary_status[0]  = (x_position + 1).to_s
+      status[:x] = movement(0, [status[:x], status[:y]], :+)
     end
-    rel_direction_status = ary_status.join(' ')
+    status.values.join(' ')
   end
 
   def commander(rel_direction_status, commands)
     commands.split('').each do |command|
-      if command == 'L'
-        return left(rel_direction_status)
-      elsif command == 'R'
-        return right(rel_direction_status)
-      else
-      end
-    end
-  end
-
-  def rover_coordinates_filter#( present_status = nil, next_commad = nil)
-    rovers_block.each do |rover|
-      rover.each_cons(2) do |present_status, commands|
-        commander(present_status, commands)
-      end
+      return left(rel_direction_status)  if command == 'L'
+      return right(rel_direction_status) if command == 'R'
+      return move(rel_direction_status)  if command == 'M'
     end
   end
 
   def rover_controller
     if commands_validator && rovers_validator
-      # rovers_block.each do |rover|
-      #   initial_movement = rover.first
-      #   next_movement = rover.split('').each do |movement|
-      #   case movement
-      #   when 'L'
-      #     left(command)
-      #   when 'R'
-      #     right(command)
-      #   when 'M'
-      #     # pending
-      #   end
-      # end
+      # commander(rel_direction_status, commands)
     else
       'Houston we have a problem: Please check your given input for possible errors'
     end
