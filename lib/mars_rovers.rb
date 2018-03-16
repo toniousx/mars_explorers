@@ -141,9 +141,23 @@ class MarsRovers
     end
   end
 
+  def rover_locator
+    rovers_new_stored_location = []
+    rovers_block.each do |rover|
+      rover.each_cons(2) do |rel_direction_status, commands|
+        rover_new_location = [rel_direction_status]
+        commands.split('').each do |command|
+          rover_new_location << commander(rover_new_location.last, command)
+        end
+        rovers_new_stored_location << rover_new_location.last
+      end
+    end
+    rovers_new_stored_location.join(' \n ')
+  end
+
   def rover_controller
     if commands_validator && rovers_validator
-      # commander(rel_direction_status, commands)
+      rover_locator
     else
       'Houston we have a problem: Please check your given input for possible errors'
     end
