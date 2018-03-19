@@ -41,37 +41,48 @@ describe MarsRovers do
     end
 
     context 'when rover validator is out of scope' do
-      let(:input)                { "5 5\n6 7 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM" }
-      let(:mars_rovers_instance) { described_class.new(input) }
-      let(:invalid_scope_rovers) { mars_rovers_instance.rovers_validator }
+      let(:invalid_input)         { "5 5\n6 7 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM" }
+      let(:mars_rovers_instance)  { described_class.new(invalid_input) }
+      let(:scope_rovers)          { mars_rovers_instance.rovers_validator }
 
-      it 'has coordenates are out the plateau' do
-        expect(invalid_scope_rovers).to eq(false)
+      it 'has coordinates are out the plateau' do
+        expect(scope_rovers).to eq(false)
       end
     end
 
     context 'when rover validator items are not 3' do
       let(:input)                      { "5 5\n4 2 3 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM" }
-      let(:invalid_big_size_rovers)    { mars_rovers_instance.rovers_validator }
+      let(:oversized_size_rovers)      { mars_rovers_instance.rovers_validator }
       let(:small_input)                { "5 5\n 3 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM" }
       let(:mars_rovers_instance_small) { described_class.new(small_input) }
-      let(:invalid_small_size_rovers)  { mars_rovers_instance_small.rovers_validator }
+      let(:undersized_size_rovers)     { mars_rovers_instance_small.rovers_validator }
 
       it 'has more than 3 items' do
-        expect(invalid_big_size_rovers).to eq(false)
+        expect(oversized_size_rovers).to eq(false)
       end
 
       it 'has less than 3 items' do
-        expect(invalid_small_size_rovers).to eq(false)
+        expect(undersized_size_rovers).to eq(false)
       end
     end
 
     context 'when rover has incorrect data' do
-      let(:input)               { "5 5\nD A -3\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM" }
-      let(:invalid_data_rovers) { mars_rovers_instance.rovers_validator }
+      let(:incorrect_input_data)  { "5 5\nD A -3\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM" }
+      let(:mars_rovers_instance)  { described_class.new(incorrect_input_data) }
+      let(:data_rovers)           { mars_rovers_instance.rovers_validator }
 
       it 'has strings instead integres and integers instead strings' do
-        expect(invalid_data_rovers).to eq(false)
+        expect(data_rovers).to eq(false)
+      end
+    end
+
+    context 'when rover has strings in coordinates' do
+      let(:invalid_input)         { "5 5\n'S' 'D' 3\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM" }
+      let(:mars_rovers_instance)  { described_class.new(invalid_input) }
+      let(:data_rovers)           { mars_rovers_instance.rovers_validator }
+
+      it 'has strings instead integres and integers instead strings' do
+        expect(data_rovers).to eq(false)
       end
     end
 
@@ -84,20 +95,22 @@ describe MarsRovers do
     end
 
     context 'when commands are not valid' do
-      let(:input)               { "5 5\n1 2 N\n1234ABC\n3 3 E\nSDD" }
-      let(:invalid_data_rovers) { mars_rovers_instance.commands_validator }
+      let(:invalid_data_input)    { "5 5\n1 2 N\n1234ABC\n3 3 E\nSDD" }
+      let(:mars_rovers_instance)  { described_class.new(invalid_data_input) }
+      let(:data_rovers)           { mars_rovers_instance.commands_validator }
 
       it 'has any kind of items except commands' do
-        expect(invalid_data_rovers).to eq(false)
+        expect(data_rovers).to eq(false)
       end
     end
 
     context 'when commands have spaces' do
-      let(:input)               { "5 5\n1 2 N\nLM LM LMLMM\n3 3 E\nMMR MMRMRRM" }
-      let(:invalid_data_rovers) { mars_rovers_instance.commands_validator }
+      let(:invalid_data_input)    { "5 5\n1 2 N\nLM LM LMLMM\n3 3 E\nMMR MMRMRRM" }
+      let(:mars_rovers_instance)  { described_class.new(invalid_data_input) }
+      let(:data_rovers)           { mars_rovers_instance.commands_validator }
 
       it 'items are correct except space' do
-        expect(invalid_data_rovers).to eq(false)
+        expect(data_rovers).to eq(false)
       end
     end
   end

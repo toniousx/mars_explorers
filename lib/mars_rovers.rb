@@ -18,11 +18,19 @@ class MarsRovers
     input[1, input.size]
   end
 
+  def integers_inside_strigns?(abscissa, ordinate)
+    Integer(abscissa) && Integer(ordinate)
+  rescue ArgumentError
+    false
+  else
+    true
+  end
+
   def relative_direction_type_validator(line)
     relative_direction = line.split
-    position           = [relative_direction[0].to_i, relative_direction[1].to_i]
+    position           = integers_inside_strigns?(relative_direction[0], relative_direction[1])
     direction          = relative_direction[2]
-    position.all?(Integer) && CARDINAL_POINTS.include?(direction)
+    position && CARDINAL_POINTS.include?(direction)
   end
 
   def rel_direction_sizer(line)
