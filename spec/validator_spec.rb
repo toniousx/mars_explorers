@@ -77,4 +77,32 @@ shared_examples_for 'Validator' do
       expect(data_rovers).to eq(false)
     end
   end
+
+  describe '#commands_validator' do
+    let(:valid_commands) { mars_rovers_instance.commands_validator }
+
+    it 'has valid commands' do
+      expect(valid_commands).to eq(true)
+    end
+  end
+
+  context 'when commands are not valid' do
+    let(:invalid_data_input)    { "5 5\n1 2 N\n1234ABC\n3 3 E\nSDD" }
+    let(:mars_rovers_instance)  { described_class.new(invalid_data_input) }
+    let(:data_rovers)           { mars_rovers_instance.commands_validator }
+
+    it 'has any kind of items except commands' do
+      expect(data_rovers).to eq(false)
+    end
+  end
+
+  context 'when commands have spaces' do
+    let(:invalid_data_input)    { "5 5\n1 2 N\nLM LM LMLMM\n3 3 E\nMMR MMRMRRM" }
+    let(:mars_rovers_instance)  { described_class.new(invalid_data_input) }
+    let(:data_rovers)           { mars_rovers_instance.commands_validator }
+
+    it 'items are correct except space' do
+      expect(data_rovers).to eq(false)
+    end
+  end
 end

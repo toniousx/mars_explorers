@@ -3,9 +3,6 @@ require 'validator'
 # robotic rover instructions to drive inside Mars plateau
 class MarsRovers
   include Validator
-
-  COMMANDS = %w[L R M].freeze
-
   attr_reader :input
 
   def initialize(input)

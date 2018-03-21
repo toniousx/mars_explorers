@@ -2,6 +2,7 @@
 module Validator
   PLATEAU_LOWER_LEFT_COORDINATES = [0, 0].freeze
   CARDINAL_POINTS = %w[N S E W].freeze
+  COMMANDS = %w[L R M].freeze
 
   def integers_inside_strigns?(abscissa, ordinate)
     Integer(abscissa) && Integer(ordinate)
