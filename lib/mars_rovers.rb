@@ -1,4 +1,4 @@
-require 'validator'
+require './lib/validator'
 
 # robotic rover instructions to drive inside Mars plateau
 class MarsRovers
@@ -104,7 +104,7 @@ class MarsRovers
         rovers_new_stored_location << rover_new_location.last
       end
     end
-    rovers_new_stored_location.join(' \n ')
+    rovers_new_stored_location.join("\n\n")
   end
 
   def rover_controller

@@ -60,7 +60,7 @@ describe MarsRovers do
       let(:two_valid_rover_controllers) { mars_rovers_instance.rover_controller }
 
       it 'has W switching from N with one left movement' do
-        expect(two_valid_rover_controllers).to eq('1 3 N \n 5 1 E')
+        expect(two_valid_rover_controllers).to eq("1 3 N\n\n5 1 E")
       end
     end
   end
@@ -196,8 +196,8 @@ describe MarsRovers do
     let(:input)                       { "5 5\n1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM" }
     let(:two_valid_rover_controllers) { mars_rovers_instance.rover_locator }
 
-    it 'has W switching from N with one left movement' do
-      expect(two_valid_rover_controllers).to eq('1 3 N \n 5 1 E')
+    it 'gives the correct output back' do
+      expect(two_valid_rover_controllers).to eq("1 3 N\n\n5 1 E")
     end
   end
 end
