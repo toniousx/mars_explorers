@@ -1,8 +1,7 @@
-require './lib/validator'
+require_relative 'validator'
 
 # robotic rover instructions to drive inside Mars plateau
 class MarsRovers
-  include Validator
   attr_reader :input
 
   def initialize(input)
@@ -11,20 +10,6 @@ class MarsRovers
 
   def rovers
     input[1, input.size]
-  end
-
-  def command_values(line)
-    line.split('').map { |i| COMMANDS.include?(i) }
-  end
-
-  def commands_validator
-    command_value_results = []
-
-    rovers.each_with_index do |line, index|
-      next unless (index + 1).even?
-      command_value_results << command_values(line)
-    end
-    command_value_results.flatten.all?(true)
   end
 
   def rovers_block
@@ -63,6 +48,10 @@ class MarsRovers
 
   def movement(axis_position, abscissa_and_ordinate, operator)
     abscissa_and_ordinate[axis_position].to_i.send(operator, 1).to_s
+  end
+
+  def plateau_upper_right_coordinates
+    input.first.split.map(&:to_i)
   end
 
   def status_hash(rel_direction)
@@ -108,7 +97,7 @@ class MarsRovers
   end
 
   def rover_controller
-    if commands_validator && rovers_validator
+    if Validator.new(plateau_upper_right_coordinates, rovers).validate
       rover_locator
     else
       'Houston we have a problem: Please check your given input for possible errors'

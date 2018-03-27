@@ -7,8 +7,6 @@ describe MarsRovers do
   let(:mars_rovers_instance) { described_class.new(input) }
   let(:input)                { "5 5\n1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM" }
 
-  it_behaves_like 'Validator'
-
   describe 'input' do
     let(:rovers) { mars_rovers_instance.rovers }
 
@@ -23,8 +21,21 @@ describe MarsRovers do
     end
   end
 
+  describe '#plateau_upper_right_coordinates' do
+    let(:plateau_upper_right_coordinates) { mars_rovers_instance.plateau_upper_right_coordinates }
+
+    it 'has only integers inside the array' do
+      expect(plateau_upper_right_coordinates).to include(5, 5)
+    end
+
+    it 'has 2 items as (x, y)' do
+      expect(plateau_upper_right_coordinates.size).to eq(2)
+    end
+  end
+
   context 'when rover is not valid' do
     let(:input)               { "5 5\n1 2 N\n1234ABC\n3 3 E\nSDD" }
+    let(:validator)           { Validator.new(input).validate }
     let(:invalid_data_rovers) { mars_rovers_instance.rover_controller }
 
     it 'raise an error comment' do

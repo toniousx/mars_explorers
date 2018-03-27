@@ -1,23 +1,13 @@
 require 'spec_helper'
 require 'mars_rovers'
 
-shared_examples_for 'Validator' do
-  describe '#plateau_upper_right_coordinates' do
-    let(:plateau_upper_right_coordinates) { mars_rovers_instance.plateau_upper_right_coordinates }
+describe Validator do
+  let(:plateau_upper_right_coordinates) { [5, 5] }
+  let(:rovers)                          { ['1 2 N', 'LMLMLMLMM', '3 3 E', 'MMRMMRMRRM'] }
+  let(:validator_instance) { described_class.new(plateau_upper_right_coordinates, rovers) }
 
-    it 'has only integers inside the array' do
-      expect(plateau_upper_right_coordinates).to include(5, 5)
-    end
-
-    it 'has 2 items as (x, y)' do
-      expect(plateau_upper_right_coordinates.size).to eq(2)
-    end
-  end
-
-  let(:input) { "5 5\n1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM" }
-  let(:mars_rovers_instance) { described_class.new(input) }
   describe '#rovers_validator' do
-    let(:valid_rovers) { mars_rovers_instance.rovers_validator }
+    let(:valid_rovers) { validator_instance.rovers_validator }
 
     it 'has a valid rover' do
       expect(valid_rovers).to eq(true)
@@ -25,7 +15,7 @@ shared_examples_for 'Validator' do
   end
 
   describe '#rovers_validator' do
-    let(:valid_rovers) { mars_rovers_instance.rovers_validator }
+    let(:valid_rovers) { validator_instance.rovers_validator }
 
     it 'has a valid rover' do
       expect(valid_rovers).to eq(true)
@@ -33,9 +23,19 @@ shared_examples_for 'Validator' do
   end
 
   context 'when rover validator is out of scope' do
-    let(:invalid_input)         { "5 5\n6 7 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM" }
-    let(:mars_rovers_instance)  { described_class.new(invalid_input) }
-    let(:scope_rovers)          { mars_rovers_instance.rovers_validator }
+    let(:invalid_rovers)        { ['6 7 N', 'LMLMLMLMM', '3 3 E', 'MMRMMRMRRM'] }
+    let(:validator_instance)    { described_class.new(plateau_upper_right_coordinates, invalid_rovers) }
+    let(:scope_rovers)          { validator_instance.rovers_validator }
+
+    it 'has coordinates are out the plateau' do
+      expect(scope_rovers).to eq(false)
+    end
+  end
+
+  context 'when plateau_upper_right_coordinates is not valid' do
+    let(:plateau_upper_right_coordinates) { [-3, 5] }
+    let(:validator_instance)    { described_class.new(plateau_upper_right_coordinates, rovers) }
+    let(:scope_rovers)          { validator_instance.rovers_validator }
 
     it 'has coordinates are out the plateau' do
       expect(scope_rovers).to eq(false)
@@ -43,11 +43,11 @@ shared_examples_for 'Validator' do
   end
 
   context 'when rover validator items are not 3' do
-    let(:input)                      { "5 5\n4 2 3 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM" }
-    let(:oversized_size_rovers)      { mars_rovers_instance.rovers_validator }
-    let(:small_input)                { "5 5\n 3 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM" }
-    let(:mars_rovers_instance_small) { described_class.new(small_input) }
-    let(:undersized_size_rovers)     { mars_rovers_instance_small.rovers_validator }
+    let(:rovers)                     { ['4 2 3 N', 'LMLMLMLMM', '3 3 E', 'MMRMMRMRRM'] }
+    let(:oversized_size_rovers)      { validator_instance.rovers_validator }
+    let(:small_input)                { ['3 N', 'LMLMLMLMM', '3 3 E', 'MMRMMRMRRM'] }
+    let(:validator_instance_small)   { described_class.new(plateau_upper_right_coordinates, small_input) }
+    let(:undersized_size_rovers)     { validator_instance_small.rovers_validator }
 
     it 'has more than 3 items' do
       expect(oversized_size_rovers).to eq(false)
@@ -59,19 +59,9 @@ shared_examples_for 'Validator' do
   end
 
   context 'when rover has incorrect data' do
-    let(:incorrect_input_data)  { "5 5\nD A -3\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM" }
-    let(:mars_rovers_instance)  { described_class.new(incorrect_input_data) }
-    let(:data_rovers)           { mars_rovers_instance.rovers_validator }
-
-    it 'has strings instead integres and integers instead strings' do
-      expect(data_rovers).to eq(false)
-    end
-  end
-
-  context 'when rover has strings in coordinates' do
-    let(:invalid_input)         { "5 5\n'S' 'D' 3\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM" }
-    let(:mars_rovers_instance)  { described_class.new(invalid_input) }
-    let(:data_rovers)           { mars_rovers_instance.rovers_validator }
+    let(:incorrect_rover_data)  { ['D A -3', 'LMLMLMLMM', '3 3 E', 'MMRMMRMRRM'] }
+    let(:validator_instance)    { described_class.new(plateau_upper_right_coordinates, incorrect_rover_data) }
+    let(:data_rovers)           { validator_instance.rovers_validator }
 
     it 'has strings instead integres and integers instead strings' do
       expect(data_rovers).to eq(false)
@@ -79,7 +69,7 @@ shared_examples_for 'Validator' do
   end
 
   describe '#commands_validator' do
-    let(:valid_commands) { mars_rovers_instance.commands_validator }
+    let(:valid_commands) { validator_instance.commands_validator }
 
     it 'has valid commands' do
       expect(valid_commands).to eq(true)
@@ -87,9 +77,9 @@ shared_examples_for 'Validator' do
   end
 
   context 'when commands are not valid' do
-    let(:invalid_data_input)    { "5 5\n1 2 N\n1234ABC\n3 3 E\nSDD" }
-    let(:mars_rovers_instance)  { described_class.new(invalid_data_input) }
-    let(:data_rovers)           { mars_rovers_instance.commands_validator }
+    let(:invalid_rover)         { ['D A -3', 'n1234ABC', '3 3 E', 'SDD'] }
+    let(:validator_instance)    { described_class.new(plateau_upper_right_coordinates, invalid_rover) }
+    let(:data_rovers)           { validator_instance.commands_validator }
 
     it 'has any kind of items except commands' do
       expect(data_rovers).to eq(false)
@@ -97,9 +87,9 @@ shared_examples_for 'Validator' do
   end
 
   context 'when commands have spaces' do
-    let(:invalid_data_input)    { "5 5\n1 2 N\nLM LM LMLMM\n3 3 E\nMMR MMRMRRM" }
-    let(:mars_rovers_instance)  { described_class.new(invalid_data_input) }
-    let(:data_rovers)           { mars_rovers_instance.commands_validator }
+    let(:invalid_rover_input)   { ['D A -3', 'LM LM LMLMM', '3 3 E', 'MMR MMRMRRM'] }
+    let(:validator_instance)    { described_class.new(plateau_upper_right_coordinates, invalid_rover_input) }
+    let(:data_rovers)           { validator_instance.commands_validator }
 
     it 'items are correct except space' do
       expect(data_rovers).to eq(false)

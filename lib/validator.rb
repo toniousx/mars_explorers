@@ -1,8 +1,16 @@
-# module to validate MarsRovers input
-module Validator
+
+# class to validate MarsRovers input
+class Validator
   PLATEAU_LOWER_LEFT_COORDINATES = [0, 0].freeze
   CARDINAL_POINTS = %w[N S E W].freeze
   COMMANDS = %w[L R M].freeze
+
+  attr_reader :rovers, :plateau_upper_right_coordinates
+
+  def initialize(plateau_upper_right_coordinates, rovers)
+    @rovers = rovers
+    @plateau_upper_right_coordinates = plateau_upper_right_coordinates
+  end
 
   def integers_inside_strigns?(abscissa, ordinate)
     Integer(abscissa) && Integer(ordinate)
@@ -10,10 +18,6 @@ module Validator
     false
   else
     true
-  end
-
-  def plateau_upper_right_coordinates
-    input.first.split.map(&:to_i)
   end
 
   def relative_direction_type_validator(line)
@@ -57,5 +61,23 @@ module Validator
       rel_dir_size_results  << rel_direction_sizer(line)
     end
     plateau_scope_results.all?(true) && rel_direction_values.all?(true) && rel_dir_size_results.all?(true)
+  end
+
+  def command_values(line)
+    line.split('').map { |i| COMMANDS.include?(i) }
+  end
+
+  def commands_validator
+    command_value_results = []
+
+    rovers.each_with_index do |line, index|
+      next unless (index + 1).even?
+      command_value_results << command_values(line)
+    end
+    command_value_results.flatten.all?(true)
+  end
+
+  def validate
+    commands_validator && rovers_validator
   end
 end
